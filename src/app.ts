@@ -1,7 +1,11 @@
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
-
+/* Installed the following as dependencies:
+  npm i "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/mysql": "^2.15.21",
+    "@types/node": "^18.11.18",*/
 const app = express();
 
 const db = mysql.createConnection({
@@ -35,6 +39,7 @@ app.post("/customers/create", (req, res) => {
   if (!customer.customerNumber) {
     return res.status(400).json({ error: "customerNumber is required" });
   }
+
   let salesRepEmployeeNumber = customer.salesRepEmployeeNumber || null;
   const q =
     "INSERT INTO customers (customerNumber,customerName,contactLastName,contactFirstName,phone,addressLine1,addressLine2,city,state,postalCode,country,salesRepEmployeeNumber,creditLimit) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -74,6 +79,8 @@ app.delete("/customers/delete/:id", (req, res) => {
   const id = req.params.id;
   const q = "DELETE FROM customers WHERE customerNumber = ?";
   db.query(q, [id], (err, data) => {
+    /* The variable 'id' is passed as an array so 
+    that the query would know that it's a parameter.*/
     if (err) return res.json(err);
     return res.json(data);
   });
